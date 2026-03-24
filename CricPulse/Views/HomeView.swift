@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @State private var vm = MatchListViewModel()
     @State private var carouselPosition: String?
+    @State private var showIconPicker = false
     @AppStorage("isDarkMode") private var isDarkMode = false
 
     var featuredMatches: [Match] {
@@ -37,13 +38,24 @@ struct HomeView: View {
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .trailingAction) {
-                    Button {
-                        withAnimation { isDarkMode.toggle() }
-                    } label: {
-                        Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
-                            .foregroundStyle(.white)
+                    HStack(spacing: 14) {
+                        Button {
+                            showIconPicker = true
+                        } label: {
+                            Image(systemName: "square.grid.2x2")
+                                .foregroundStyle(.white)
+                        }
+                        Button {
+                            withAnimation { isDarkMode.toggle() }
+                        } label: {
+                            Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
+                                .foregroundStyle(.white)
+                        }
                     }
                 }
+            }
+            .sheet(isPresented: $showIconPicker) {
+                IconPickerView()
             }
             .task { await vm.load() }
             .refreshable { await vm.refresh() }
