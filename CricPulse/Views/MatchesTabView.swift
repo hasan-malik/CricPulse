@@ -147,8 +147,9 @@ struct MatchCard: View {
                 // Score rows
                 if let scores = match.score, !scores.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
-                        ForEach(scores.prefix(2), id: \.inning) { score in
-                            let name = match.teams.first(where: { (score.inning ?? "").hasPrefix($0) }) ?? ""
+                        ForEach(Array(scores.prefix(2).enumerated()), id: \.element.inning) { idx, score in
+                            let name = match.teams.first(where: { (score.inning ?? "").hasPrefix($0) })
+                                ?? (idx < match.teams.count ? match.teams[idx] : "")
                             let bold = winner == nil || winner == name
                             HStack {
                                 Text(name.teamFlag + " " + name.teamAbbreviation)

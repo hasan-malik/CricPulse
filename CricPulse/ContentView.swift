@@ -14,6 +14,11 @@ struct ContentView: View {
                 .tabItem {
                     Label("Matches", systemImage: "list.bullet.rectangle")
                 }
+
+            ArchiveBrowseView()
+                .tabItem {
+                    Label("Archive", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+                }
         }
         .tint(CricColors.accent)
         .preferredColorScheme(isDarkMode ? .dark : .light)

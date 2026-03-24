@@ -24,6 +24,12 @@ struct CSMatch: Codable, Identifiable {
     let playerOfMatch:  [String]
     let tossWinner:     String?
     let tossDecision:   String?
+    let innings:        [CSInnings]?   // present in list responses, nil in search results
+}
+
+struct CSMatchPage: Codable {
+    let total:   Int
+    let matches: [CSMatch]
 }
 
 // ── Innings summary (inside CSMatchDetail) ────────────────────────────────────

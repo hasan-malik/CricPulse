@@ -82,6 +82,22 @@ actor CricSheetsAPIService {
         try await fetch(url: url("/matches/\(matchId)/innings/\(innings)/fow"))
     }
 
+    func fetchYears() async throws -> [String] {
+        struct R: Decodable { let years: [String] }
+        let r: R = try await fetch(url: url("/matches/years"))
+        return r.years
+    }
+
+    func fetchMatches(year: String? = nil, offset: Int = 0, limit: Int = 50) async throws -> CSMatchPage {
+        var comps = URLComponents(string: baseURL + "/matches")!
+        comps.queryItems = [
+            .init(name: "offset", value: "\(offset)"),
+            .init(name: "limit",  value: "\(limit)"),
+        ]
+        if let y = year { comps.queryItems?.append(.init(name: "year", value: y)) }
+        return try await fetch(url: comps.url!)
+    }
+
     // MARK: - Private helpers
 
     private func url(_ path: String) -> URL {

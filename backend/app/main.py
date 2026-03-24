@@ -27,6 +27,7 @@ async def list_matches(
     format:     str | None = None,
     team:       str | None = None,
     tournament: str | None = None,
+    year:       str | None = None,
     limit:  int = Query(20, le=100),
     offset: int = 0,
     db: AsyncSession = Depends(get_db),
@@ -37,13 +38,38 @@ async def list_matches(
     if tournament:
         q = q.where(Match.tournament.ilike(f"%{tournament}%"))
     if team:
-        # SQLite: cast JSON list to text and substring-search
         q = q.where(Match.teams.cast(str).ilike(f"%{team}%"))
+    if year:
+        q = q.where(Match.date.startswith(year))
 
     total = (await db.execute(select(func.count()).select_from(q.subquery()))).scalar()
     matches = (await db.execute(q.offset(offset).limit(limit))).scalars().all()
 
-    return {"total": total, "matches": [_match_summary(m) for m in matches]}
+    # Batch-load innings so list items include scores
+    match_ids = [m.id for m in matches]
+    innings_rows = (await db.execute(
+        select(Innings).where(Innings.match_id.in_(match_ids)).order_by(Innings.innings_number)
+    )).scalars().all()
+    innings_by_match: dict[str, list] = {}
+    for i in innings_rows:
+        innings_by_match.setdefault(i.match_id, []).append(i)
+
+    return {
+        "total": total,
+        "matches": [_match_summary(m, innings_by_match.get(m.id)) for m in matches],
+    }
+
+
+# ── Available years ───────────────────────────────────────────────────────────
+
+@app.get("/matches/years")
+async def list_years(db: AsyncSession = Depends(get_db)):
+    rows = (await db.execute(
+        select(func.substr(Match.date, 1, 4))
+        .distinct()
+        .order_by(desc(func.substr(Match.date, 1, 4)))
+    )).scalars().all()
+    return {"years": [r for r in rows if r]}
 
 
 # ── Match search (fuzzy: teams + date → CricSheets ID) ───────────────────────
@@ -200,7 +226,7 @@ async def _get_innings(match_id: str, n: int, db: AsyncSession) -> Innings:
     return row
 
 
-def _match_summary(m: Match) -> dict:
+def _match_summary(m: Match, innings: list | None = None) -> dict:
     result = ""
     if m.winner:
         if m.win_by_runs:
@@ -223,6 +249,7 @@ def _match_summary(m: Match) -> dict:
         "player_of_match":  m.player_of_match,
         "toss_winner":      m.toss_winner,
         "toss_decision":    m.toss_decision,
+        **({"innings": [_innings_summary(i) for i in innings]} if innings is not None else {}),
     }
 
 
