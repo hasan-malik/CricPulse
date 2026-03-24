@@ -1,3 +1,4 @@
+#if os(watchOS)
 import SwiftUI
 
 // MARK: - Root Match List
@@ -94,3 +95,4 @@ struct WatchMatchRow: View {
         .padding(.vertical, 2)
     }
 }
+#endif

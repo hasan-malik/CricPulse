@@ -1,3 +1,4 @@
+#if os(watchOS)
 import SwiftUI
 
 // MARK: - Match Detail (watch)
@@ -130,3 +131,4 @@ struct WatchMatchDetailView: View {
         return label
     }
 }
+#endif

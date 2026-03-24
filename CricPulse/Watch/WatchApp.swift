@@ -1,3 +1,4 @@
+#if os(watchOS)
 // MARK: - watchOS App Entry Point
 //
 // ⚠️  Add this file to the watchOS target ONLY.
@@ -8,15 +9,9 @@
 //   Name: "CricPulse Watch App"  |  Bundle: hasan.CricPulse.watchkitapp
 //   Deployment target: watchOS 10.0
 //   Then add to the watch target:
-//     • Shared/Models/CricketModels.swift
-//     • Shared/Models/CricSheetsModels.swift
-//     • Shared/Networking/CricketAPIService.swift
-//     • Shared/Networking/CricSheetsAPIService.swift
-//     • Shared/ViewModels/MatchListViewModel.swift
-//     • Shared/ViewModels/MatchDetailViewModel.swift
+//     • Shared/ (the whole folder — it's a synchronized root group)
 //     • CricPulse/Config/CricColors.swift
 //     • CricPulse/Models/TeamHelpers.swift
-//     • CricPulse/Config/APIConfig.swift
 //     • CricPulse/Watch/WatchContentView.swift
 //     • CricPulse/Watch/WatchMatchDetailView.swift
 //     • CricPulse/Watch/WatchApp.swift  (this file)
@@ -34,3 +29,4 @@ struct CricPulseWatchApp: App {
         }
     }
 }
+#endif

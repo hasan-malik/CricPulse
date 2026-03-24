@@ -16,6 +16,11 @@
 			path = CricPulse;
 			sourceTree = "<group>";
 		};
+		A7F7F166984C4937A2ECB32D /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				9669BC052F72396A00A040D7 /* CricPulse */,
+				A7F7F166984C4937A2ECB32D /* Shared */,
 				9669BC042F72396A00A040D7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -62,6 +68,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				9669BC052F72396A00A040D7 /* CricPulse */,
+				A7F7F166984C4937A2ECB32D /* Shared */,
 			);
 			name = CricPulse;
 			packageProductDependencies = (
@@ -244,6 +251,7 @@
 		9669BC0F2F72396D00A040D7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIconBall AppIconBallDark AppIconBat AppIconBatDark";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -288,6 +296,7 @@
 		9669BC102F72396D00A040D7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "\"AppIconBall AppIconBallDark AppIconBat AppIconBatDark\" \"AppIconBall AppIconBallDark AppIconBat AppIconBatDark\"";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
