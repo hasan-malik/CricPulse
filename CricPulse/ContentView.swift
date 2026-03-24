@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @AppStorage("isDarkMode") private var isDarkMode = false
+
     var body: some View {
         TabView {
             HomeView()
@@ -13,10 +15,7 @@ struct ContentView: View {
                     Label("Matches", systemImage: "list.bullet.rectangle")
                 }
         }
-        .tint(CricColors.accent)  // cricket red
+        .tint(CricColors.accent)
+        .preferredColorScheme(isDarkMode ? .dark : .light)
     }
-}
-
-#Preview {
-    ContentView()
 }
