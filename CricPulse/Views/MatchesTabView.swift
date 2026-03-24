@@ -147,22 +147,35 @@ struct MatchCard: View {
                     }
                 }
 
-                Text(match.name)
-                    .font(.subheadline.weight(.bold))
-                    .foregroundStyle(.primary)
-                    .lineLimit(2)
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        if let t1 = match.teams.first {
+                            Text(t1.teamFlag + " " + t1.teamAbbreviation)
+                                .font(.subheadline.weight(.black))
+                        }
+                        Text("vs").font(.caption).foregroundStyle(.secondary)
+                        if match.teams.count > 1 {
+                            Text(match.teams[1].teamFlag + " " + match.teams[1].teamAbbreviation)
+                                .font(.subheadline.weight(.black))
+                        }
+                    }
+                    if !match.seriesContext.isEmpty {
+                        Text(match.seriesContext)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
 
                 if let scores = match.score, !scores.isEmpty {
                     VStack(alignment: .leading, spacing: 3) {
                         ForEach(scores.prefix(2), id: \.inning) { score in
                             HStack {
-                                Text(score.inning?.components(separatedBy: " ").prefix(3).joined(separator: " ") ?? "")
-                                    .font(.caption2)
+                                Text((score.inning?.components(separatedBy: " ").first ?? "").teamAbbreviation)
+                                    .font(.caption2.weight(.semibold))
                                     .foregroundStyle(.secondary)
-                                    .lineLimit(1)
                                 Spacer()
                                 Text(score.display)
-                                    .font(.caption.monospacedDigit().weight(.semibold))
+                                    .font(.subheadline.monospacedDigit().weight(.black))
                                     .foregroundStyle(.primary)
                             }
                         }
