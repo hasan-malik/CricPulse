@@ -2,6 +2,8 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var vm = MatchListViewModel()
+    @State private var carouselPosition: String?
+    @AppStorage("isDarkMode") private var isDarkMode = false
 
     var featuredMatches: [Match] {
         let sorted = vm.matches.sorted {
@@ -11,10 +13,15 @@ struct HomeView: View {
         return Array(sorted.prefix(6))
     }
 
+    var currentCarouselPage: Int {
+        featuredMatches.firstIndex(where: { $0.id == carouselPosition }) ?? 0
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
                 CricColors.surface.ignoresSafeArea()
+                FloatingBalls()
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 0) {
                         if !vm.matches.isEmpty {
@@ -26,7 +33,18 @@ struct HomeView: View {
             }
             .navigationTitle("CricPulse")
             .navigationBarTitleDisplayMode(.large)
-            .tint(CricColors.accent)
+            .toolbarBackground(CricColors.accent, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .trailingAction) {
+                    Button {
+                        withAnimation { isDarkMode.toggle() }
+                    } label: {
+                        Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
+                            .foregroundStyle(.white)
+                    }
+                }
+            }
             .task { await vm.load() }
             .refreshable { await vm.refresh() }
         }
@@ -35,24 +53,51 @@ struct HomeView: View {
     // MARK: - Featured Carousel
 
     private var featuredCarousel: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "Featured", subtitle: vm.liveCount > 0 ? "\(vm.liveCount) Live" : nil, liveIndicator: vm.liveCount > 0)
-                .padding(.horizontal)
-                .padding(.top, 20)
+        VStack(alignment: .leading, spacing: 10) {
+            SectionHeader(
+                title: "Featured",
+                subtitle: vm.liveCount > 0 ? "\(vm.liveCount) Live" : nil,
+                liveIndicator: vm.liveCount > 0
+            )
+            .padding(.horizontal)
+            .padding(.top, 20)
 
-            TabView {
-                ForEach(featuredMatches) { match in
-                    NavigationLink(destination: MatchDetailView(match: match)) {
-                        FeaturedMatchCard(match: match)
-                            .padding(.horizontal, 16)
+            // Peek carousel — next card visible on right edge
+            GeometryReader { geo in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(featuredMatches) { match in
+                            NavigationLink(destination: MatchDetailView(match: match)) {
+                                FeaturedMatchCard(match: match)
+                                    .frame(width: geo.size.width - 48)
+                            }
+                            .buttonStyle(.plain)
+                            .id(match.id)
+                        }
                     }
-                    .buttonStyle(.plain)
+                    .padding(.horizontal, 16)
+                    .scrollTargetLayout()
                 }
+                .scrollTargetBehavior(.viewAligned)
+                .scrollPosition(id: $carouselPosition)
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .frame(height: 210)
-            .tint(CricColors.accent)
-            .padding(.bottom, 4)
+            .frame(height: 196)
+
+            // Page dots
+            if featuredMatches.count > 1 {
+                HStack(spacing: 6) {
+                    ForEach(featuredMatches.indices, id: \.self) { i in
+                        Capsule()
+                            .fill(currentCarouselPage == i
+                                  ? CricColors.accent
+                                  : Color.gray.opacity(0.25))
+                            .frame(width: currentCarouselPage == i ? 18 : 6, height: 6)
+                            .animation(.spring(response: 0.3), value: currentCarouselPage)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.top, 2)
+            }
         }
     }
 
@@ -80,9 +125,8 @@ struct FeaturedMatchCard: View {
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            // White card with subtle type-color gradient at top
             RoundedRectangle(cornerRadius: 20)
-                .fill(Color.white)
+                .fill(CricColors.card)
                 .overlay(
                     LinearGradient(
                         colors: [match.typeColor.opacity(0.10), Color.clear],
@@ -101,9 +145,8 @@ struct FeaturedMatchCard: View {
             }
             .clipShape(RoundedRectangle(cornerRadius: 20))
 
-            VStack(alignment: .leading, spacing: 8) {
-                // Badges
-                HStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 6) {
                     MatchTypeBadge(type: match.matchType)
                     if match.isLive { LiveBadge() }
                     Spacer()
@@ -116,31 +159,40 @@ struct FeaturedMatchCard: View {
 
                 Spacer()
 
-                // Match name
-                Text(match.name)
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.primary)
-                    .lineLimit(2)
+                // Team names with flags
+                HStack(spacing: 6) {
+                    if let t1 = match.teams.first {
+                        Text(t1.teamFlag)
+                        Text(t1.teamAbbreviation)
+                            .font(.title3.weight(.black))
+                    }
+                    Text("vs")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 2)
+                    if match.teams.count > 1 {
+                        Text(match.teams[1].teamFlag)
+                        Text(match.teams[1].teamAbbreviation)
+                            .font(.title3.weight(.black))
+                    }
+                }
 
-                // Scores
+                // Scores — bigger
                 if let scores = match.score, !scores.isEmpty {
                     HStack(spacing: 20) {
                         ForEach(scores.prefix(2), id: \.inning) { score in
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(score.inning?.components(separatedBy: " ").first ?? "")
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text((score.inning?.components(separatedBy: " ").first ?? "").teamAbbreviation)
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                                 Text(score.display)
-                                    .font(.subheadline.weight(.bold).monospacedDigit())
-                                    .foregroundStyle(.primary)
+                                    .font(.title2.weight(.black).monospacedDigit())
                             }
                         }
                         Spacer()
                     }
                 }
 
-                // Status
                 Text(match.status)
                     .font(.caption)
                     .foregroundStyle(match.isLive ? CricColors.live : .secondary)
