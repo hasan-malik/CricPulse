@@ -6,7 +6,7 @@ struct MatchListView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color(.systemGroupedBackground).ignoresSafeArea()
+                Color.groupedBackground.ignoresSafeArea()
 
                 Group {
                     if vm.isLoading && vm.matches.isEmpty {
@@ -67,7 +67,7 @@ struct MatchListView: View {
     // MARK: - Filter Menu
 
     private var filterMenu: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
+        ToolbarItem(placement: .trailingAction) {
             Menu {
                 ForEach(MatchListViewModel.MatchFilter.allCases, id: \.self) { filter in
                     Button {

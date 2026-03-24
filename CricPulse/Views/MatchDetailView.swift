@@ -6,7 +6,7 @@ struct MatchDetailView: View {
 
     var body: some View {
         ZStack {
-            Color(.systemGroupedBackground).ignoresSafeArea()
+            Color.groupedBackground.ignoresSafeArea()
 
             if vm.isLoading && vm.scorecard == nil {
                 ProgressView("Loading scorecard…")
@@ -40,8 +40,8 @@ struct MatchDetailView: View {
                 // Score summary
                 if let innings = vm.selectedInnings {
                     scoreSummaryCard(innings: innings)
-                    WagonWheelView(shots: vm.wagonWheelShots(for: innings))
-                    RunRateChartView(overData: vm.overData(for: innings))
+//                    WagonWheelView(shots: vm.wagonWheelShots(for: innings))
+//                    RunRateChartView(overData: vm.overData(for: innings))
                     BatsmenView(innings: innings)
                     BowlersView(innings: innings)
                 }
@@ -76,7 +76,7 @@ struct MatchDetailView: View {
                             .padding(.vertical, 7)
                             .background(vm.selectedInningsIndex == i
                                 ? Color.accentColor
-                                : Color(.secondarySystemBackground))
+                                : Color.cardBackground)
                             .foregroundStyle(vm.selectedInningsIndex == i ? .white : .primary)
                             .clipShape(Capsule())
                     }
