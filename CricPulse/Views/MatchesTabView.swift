@@ -125,69 +125,67 @@ private struct MatchSection: View {
 struct MatchCard: View {
     let match: Match
 
+    /// The winning team name for completed matches; nil means in-progress or tied.
+    private var winner: String? {
+        guard match.matchEnded == true else { return nil }
+        return match.teams.first {
+            match.status.localizedCaseInsensitiveContains($0) &&
+            match.status.localizedCaseInsensitiveContains("won")
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Colored type strip
-            HStack(spacing: 0) {
-                Rectangle()
-                    .fill(match.typeColor)
-                    .frame(height: 3)
-            }
-            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 14, topTrailingRadius: 14))
+            // Type colour strip
+            Rectangle()
+                .fill(match.typeColor)
+                .frame(maxWidth: .infinity)
+                .frame(height: 3)
+                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 14, topTrailingRadius: 14))
 
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    MatchTypeBadge(type: match.matchType)
-                    if match.isLive { LiveBadge() }
-                    Spacer()
-                    if let date = match.date {
-                        Text(String(date.prefix(10)))
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 8) {
+                // Score rows
+                if let scores = match.score, !scores.isEmpty {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(scores.prefix(2), id: \.inning) { score in
+                            let name = match.teams.first(where: { (score.inning ?? "").hasPrefix($0) }) ?? ""
+                            let bold = winner == nil || winner == name
+                            HStack {
+                                Text(name.teamFlag + " " + name.teamAbbreviation)
+                                    .font(.subheadline.weight(.black))
+                                    .foregroundStyle(bold ? .primary : .secondary)
+                                Spacer()
+                                Text(score.display)
+                                    .font(.subheadline.monospacedDigit().weight(bold ? .black : .regular))
+                                    .foregroundStyle(bold ? .primary : .secondary)
+                            }
+                        }
                     }
-                }
-
-                VStack(alignment: .leading, spacing: 2) {
+                } else {
+                    // Upcoming — no scores yet
                     HStack(spacing: 4) {
                         if let t1 = match.teams.first {
                             Text(t1.teamFlag + " " + t1.teamAbbreviation)
                                 .font(.subheadline.weight(.black))
                         }
-                        Text("vs").font(.caption).foregroundStyle(.secondary)
+                        Text("vs").font(.caption).foregroundStyle(.tertiary)
                         if match.teams.count > 1 {
                             Text(match.teams[1].teamFlag + " " + match.teams[1].teamAbbreviation)
                                 .font(.subheadline.weight(.black))
                         }
                     }
-                    if !match.seriesContext.isEmpty {
-                        Text(match.seriesContext)
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
-                    }
                 }
 
-                if let scores = match.score, !scores.isEmpty {
-                    VStack(alignment: .leading, spacing: 3) {
-                        ForEach(scores.prefix(2), id: \.inning) { score in
-                            HStack {
-                                Text((score.inning?.components(separatedBy: " ").first ?? "").teamAbbreviation)
-                                    .font(.caption2.weight(.semibold))
-                                    .foregroundStyle(.secondary)
-                                Spacer()
-                                Text(score.display)
-                                    .font(.subheadline.monospacedDigit().weight(.black))
-                                    .foregroundStyle(.primary)
-                            }
-                        }
-                    }
+                // Result / status
+                HStack(spacing: 5) {
+                    if match.isLive { LivePulse() }
+                    Text(match.status)
+                        .font(.caption)
+                        .foregroundStyle(match.isLive ? CricColors.live : .secondary)
+                        .lineLimit(2)
                 }
-
-                Text(match.status)
-                    .font(.caption)
-                    .foregroundStyle(match.isLive ? CricColors.live : .secondary)
-                    .lineLimit(2)
             }
-            .padding(14)
+            .padding(12)
         }
         .background(CricColors.card)
         .clipShape(RoundedRectangle(cornerRadius: 14))

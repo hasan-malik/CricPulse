@@ -10,7 +10,7 @@ enum CricColors {
 
     // Adaptive — automatically flip with system color scheme
     static var background: Color {
-        #if os(iOS)
+        #if os(iOS) || os(watchOS)
         Color(UIColor.systemBackground)
         #else
         Color(NSColor.windowBackgroundColor)
@@ -18,7 +18,7 @@ enum CricColors {
     }
 
     static var surface: Color {
-        #if os(iOS)
+        #if os(iOS) || os(watchOS)
         Color(UIColor.systemGroupedBackground)
         #else
         Color(NSColor.underPageBackgroundColor)
@@ -26,7 +26,7 @@ enum CricColors {
     }
 
     static var card: Color {
-        #if os(iOS)
+        #if os(iOS) || os(watchOS)
         Color(UIColor.secondarySystemGroupedBackground)
         #else
         Color(NSColor.controlBackgroundColor)
@@ -34,7 +34,7 @@ enum CricColors {
     }
 
     static var cardBorder: Color {
-        #if os(iOS)
+        #if os(iOS) || os(watchOS)
         Color(UIColor.separator)
         #else
         Color(NSColor.separatorColor)
