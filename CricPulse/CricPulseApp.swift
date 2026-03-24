@@ -1,11 +1,5 @@
-//
-//  CricPulseApp.swift
-//  CricPulse
-//
-//  Created by Hasan Malik on 2026-03-23.
-//
-
 import SwiftUI
+import SwiftData
 
 @main
 struct CricPulseApp: App {
@@ -13,5 +7,6 @@ struct CricPulseApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: [FavouriteTeam.self, RecentlyViewedMatch.self])
     }
 }
