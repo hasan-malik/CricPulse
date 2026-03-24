@@ -13,7 +13,7 @@ struct ContentView: View {
                     Label("Matches", systemImage: "list.bullet.rectangle")
                 }
         }
-        .tint(CricColors.accent)
+        .tint(CricColors.accent)  // cricket red
     }
 }
 

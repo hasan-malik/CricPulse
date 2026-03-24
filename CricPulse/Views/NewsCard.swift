@@ -11,7 +11,7 @@ struct NewsCard: View {
                     .foregroundStyle(Color(hex: article.tagColor))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 3)
-                    .background(Color(hex: article.tagColor).opacity(0.15))
+                    .background(Color(hex: article.tagColor).opacity(0.12))
                     .clipShape(Capsule())
 
                 Spacer()
@@ -38,6 +38,7 @@ struct NewsCard: View {
             RoundedRectangle(cornerRadius: 14)
                 .stroke(CricColors.cardBorder, lineWidth: 1)
         )
+        .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
     }
 
     private func timeAgo(_ minutes: Int) -> String {

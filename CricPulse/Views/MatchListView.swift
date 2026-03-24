@@ -6,11 +6,12 @@ struct MatchListView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.groupedBackground.ignoresSafeArea()
+                CricColors.surface.ignoresSafeArea()
 
                 Group {
                     if vm.isLoading && vm.matches.isEmpty {
                         ProgressView("Loading matches…")
+                            .tint(CricColors.accent)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else if let error = vm.error, vm.matches.isEmpty {
                         ErrorView(message: error) { await vm.load() }
@@ -21,6 +22,7 @@ struct MatchListView: View {
             }
             .navigationTitle("CricPulse")
             .navigationBarTitleDisplayMode(.large)
+            .tint(CricColors.accent)
             .searchable(text: $vm.searchText, prompt: "Search teams or matches")
             .toolbar { filterMenu }
             .task { await vm.load() }
@@ -32,15 +34,13 @@ struct MatchListView: View {
 
     private var matchList: some View {
         ScrollView {
-            LazyVStack(spacing: 12) {
-                // Live badge header
+            LazyVStack(spacing: 10) {
                 if vm.liveCount > 0 {
-                    HStack {
-                        Image(systemName: "dot.radiowaves.left.and.right")
-                            .foregroundStyle(.red)
+                    HStack(spacing: 6) {
+                        LivePulse()
                         Text("\(vm.liveCount) Live \(vm.liveCount == 1 ? "Match" : "Matches")")
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.red)
+                            .foregroundStyle(CricColors.live)
                         Spacer()
                     }
                     .padding(.horizontal)
@@ -90,56 +90,60 @@ struct MatchRowView: View {
     let match: Match
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            // Header: type badge + live indicator + date
-            HStack {
-                MatchTypeBadge(type: match.matchType)
-                if match.isLive {
-                    LiveBadge()
-                }
-                Spacer()
-                if let date = match.date {
-                    Text(date.prefix(10))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
+        VStack(alignment: .leading, spacing: 0) {
+            Rectangle()
+                .fill(match.typeColor)
+                .frame(height: 3)
+                .clipShape(UnevenRoundedRectangle(topLeadingRadius: 14, topTrailingRadius: 14))
 
-            // Teams
-            Text(match.name)
-                .font(.headline)
-                .foregroundStyle(.primary)
-                .lineLimit(2)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    MatchTypeBadge(type: match.matchType)
+                    if match.isLive { LiveBadge() }
+                    Spacer()
+                    if let date = match.date {
+                        Text(date.prefix(10))
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
 
-            // Scores
-            if let scores = match.score, !scores.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(scores.prefix(2), id: \.inning) { score in
-                        HStack {
-                            Text(score.inning ?? "")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                            Spacer()
-                            Text(score.display)
-                                .font(.caption.monospacedDigit().weight(.semibold))
-                                .foregroundStyle(.primary)
+                Text(match.name)
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(.primary)
+                    .lineLimit(2)
+
+                if let scores = match.score, !scores.isEmpty {
+                    VStack(alignment: .leading, spacing: 3) {
+                        ForEach(scores.prefix(2), id: \.inning) { score in
+                            HStack {
+                                Text(score.inning ?? "")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                                Spacer()
+                                Text(score.display)
+                                    .font(.caption.monospacedDigit().weight(.semibold))
+                                    .foregroundStyle(.primary)
+                            }
                         }
                     }
                 }
-                .padding(.top, 2)
-            }
 
-            // Status
-            Text(match.status)
-                .font(.caption)
-                .foregroundStyle(match.isLive ? .red : .secondary)
-                .lineLimit(2)
+                Text(match.status)
+                    .font(.caption)
+                    .foregroundStyle(match.isLive ? CricColors.live : .secondary)
+                    .lineLimit(2)
+            }
+            .padding(14)
         }
-        .padding()
-        .background(.background)
+        .background(CricColors.card)
         .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.06), radius: 6, y: 2)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(match.isLive ? CricColors.live.opacity(0.3) : CricColors.cardBorder, lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 2)
     }
 }
 
@@ -149,10 +153,10 @@ struct MatchTypeBadge: View {
     let type: String
     var color: Color {
         switch type.lowercased() {
-        case "test": return .purple
-        case "odi":  return .blue
-        case "t20":  return .orange
-        default:     return .gray
+        case "test":        return CricColors.test
+        case "odi":         return CricColors.odi
+        case "t20", "t20i": return CricColors.t20
+        default:            return .gray
         }
     }
     var body: some View {
@@ -160,7 +164,7 @@ struct MatchTypeBadge: View {
             .font(.caption2.weight(.black))
             .padding(.horizontal, 7)
             .padding(.vertical, 3)
-            .background(color.opacity(0.15))
+            .background(color.opacity(0.12))
             .foregroundStyle(color)
             .clipShape(Capsule())
     }
@@ -171,18 +175,18 @@ struct LiveBadge: View {
     var body: some View {
         HStack(spacing: 4) {
             Circle()
-                .fill(.red)
+                .fill(CricColors.live)
                 .frame(width: 6, height: 6)
                 .scaleEffect(pulsing ? 1.4 : 1.0)
                 .animation(.easeInOut(duration: 0.8).repeatForever(), value: pulsing)
                 .onAppear { pulsing = true }
             Text("LIVE")
                 .font(.caption2.weight(.black))
-                .foregroundStyle(.red)
+                .foregroundStyle(CricColors.live)
         }
         .padding(.horizontal, 7)
         .padding(.vertical, 3)
-        .background(.red.opacity(0.1))
+        .background(CricColors.live.opacity(0.10))
         .clipShape(Capsule())
     }
 }
@@ -203,6 +207,7 @@ struct ErrorView: View {
                 .multilineTextAlignment(.center)
             Button("Try Again") { Task { await retry() } }
                 .buttonStyle(.borderedProminent)
+                .tint(CricColors.accent)
         }
         .padding()
     }

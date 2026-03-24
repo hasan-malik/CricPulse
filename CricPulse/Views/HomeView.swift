@@ -5,7 +5,6 @@ struct HomeView: View {
 
     var featuredMatches: [Match] {
         let sorted = vm.matches.sorted {
-            // Live first, then by date descending
             if $0.isLive != $1.isLive { return $0.isLive }
             return ($0.date ?? "") > ($1.date ?? "")
         }
@@ -15,7 +14,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                CricColors.background.ignoresSafeArea()
+                CricColors.surface.ignoresSafeArea()
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 0) {
                         if !vm.matches.isEmpty {
@@ -27,7 +26,7 @@ struct HomeView: View {
             }
             .navigationTitle("CricPulse")
             .navigationBarTitleDisplayMode(.large)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .tint(CricColors.accent)
             .task { await vm.load() }
             .refreshable { await vm.refresh() }
         }
@@ -39,7 +38,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeader(title: "Featured", subtitle: vm.liveCount > 0 ? "\(vm.liveCount) Live" : nil, liveIndicator: vm.liveCount > 0)
                 .padding(.horizontal)
-                .padding(.top, 16)
+                .padding(.top, 20)
 
             TabView {
                 ForEach(featuredMatches) { match in
@@ -51,8 +50,9 @@ struct HomeView: View {
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
-            .frame(height: 200)
-            .padding(.bottom, 8)
+            .frame(height: 210)
+            .tint(CricColors.accent)
+            .padding(.bottom, 4)
         }
     }
 
@@ -62,7 +62,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             SectionHeader(title: "Latest News", subtitle: nil, liveIndicator: false)
                 .padding(.horizontal)
-                .padding(.top, 24)
+                .padding(.top, 28)
 
             ForEach(NewsItem.dummyArticles) { article in
                 NewsCard(article: article)
@@ -80,19 +80,26 @@ struct FeaturedMatchCard: View {
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            // Background gradient
+            // White card with subtle type-color gradient at top
             RoundedRectangle(cornerRadius: 20)
-                .fill(
+                .fill(Color.white)
+                .overlay(
                     LinearGradient(
-                        colors: [match.typeColor.opacity(0.8), CricColors.card],
+                        colors: [match.typeColor.opacity(0.10), Color.clear],
                         startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+                        endPoint: .center
                     )
                 )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(match.typeColor.opacity(0.3), lineWidth: 1)
-                )
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+
+            // Left accent bar
+            HStack(spacing: 0) {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(match.typeColor)
+                    .frame(width: 4)
+                Spacer()
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 20))
 
             VStack(alignment: .leading, spacing: 8) {
                 // Badges
@@ -103,7 +110,7 @@ struct FeaturedMatchCard: View {
                     if let date = match.date {
                         Text(String(date.prefix(10)))
                             .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.6))
+                            .foregroundStyle(.secondary)
                     }
                 }
 
@@ -113,20 +120,20 @@ struct FeaturedMatchCard: View {
                 Text(match.name)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.primary)
                     .lineLimit(2)
 
                 // Scores
                 if let scores = match.score, !scores.isEmpty {
-                    HStack(spacing: 16) {
+                    HStack(spacing: 20) {
                         ForEach(scores.prefix(2), id: \.inning) { score in
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(score.inning?.components(separatedBy: " ").first ?? "")
                                     .font(.caption2)
-                                    .foregroundStyle(.white.opacity(0.6))
+                                    .foregroundStyle(.secondary)
                                 Text(score.display)
                                     .font(.subheadline.weight(.bold).monospacedDigit())
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(.primary)
                             }
                         }
                         Spacer()
@@ -136,12 +143,13 @@ struct FeaturedMatchCard: View {
                 // Status
                 Text(match.status)
                     .font(.caption)
-                    .foregroundStyle(.white.opacity(0.7))
+                    .foregroundStyle(match.isLive ? CricColors.live : .secondary)
                     .lineLimit(1)
             }
             .padding(16)
         }
-        .frame(height: 176)
+        .frame(height: 186)
+        .shadow(color: .black.opacity(0.07), radius: 12, x: 0, y: 4)
     }
 }
 
@@ -156,7 +164,7 @@ struct SectionHeader: View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             Text(title)
                 .font(.title2.weight(.black))
-                .foregroundStyle(.white)
+                .foregroundStyle(.primary)
             if liveIndicator, let sub = subtitle {
                 HStack(spacing: 4) {
                     Circle().fill(CricColors.live).frame(width: 6, height: 6)
