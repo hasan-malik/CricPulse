@@ -54,7 +54,7 @@ struct WatchMatchDetailView: View {
                                     .font(.caption2.weight(.semibold))
                                     .padding(.horizontal, 8).padding(.vertical, 4)
                                     .background(vm.selectedInningsIndex == i
-                                                ? CricColors.accent : Color(.systemGray5))
+                                                ? CricColors.accent : Color(white: 0.2))
                                     .foregroundStyle(vm.selectedInningsIndex == i ? .white : .primary)
                                     .clipShape(Capsule())
                             }
