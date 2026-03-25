@@ -12,15 +12,15 @@ enum AppIconVariant: String, CaseIterable {
         switch self {
         case .ball:     return "Red Ball"
         case .ballDark: return "Dark Ball"
-        case .bat:      return "Willow"
-        case .batDark:  return "Dark Willow"
+        case .bat:      return "Cricket Bat"
+        case .batDark:  return "Dark Bat"
         }
     }
 
     var emoji: String {
         switch self {
         case .ball, .ballDark: return "🏏"
-        case .bat, .batDark:   return "🪵"
+        case .bat, .batDark:   return "🏏"
         }
     }
 
