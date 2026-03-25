@@ -1,0 +1,12 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Data — downloaded at runtime, not committed
+data/cricsheet/
+data/cricpulse.db
+data/cricpulse.db-shm
+data/cricpulse.db-wal
