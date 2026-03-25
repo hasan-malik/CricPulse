@@ -6,14 +6,49 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		C3A4B5D6000AWATCH00000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9669BBFB2F72396A00A040D7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C3A4B5D6009AWATCH00000001;
+			remoteInfo = "CricPulse Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C3A4B5D600CAWATCH00000001 /* Embed Watch App */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				C3A4B5D600DAWATCH00000001 /* CricPulse Watch App.app in Embed Watch App */,
+			);
+			name = "Embed Watch App";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		9669BC032F72396A00A040D7 /* CricPulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CricPulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3A4B5D6002AWATCH00000001 /* CricPulse Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CricPulse Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9669BC052F72396A00A040D7 /* CricPulse */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = CricPulse;
+			sourceTree = "<group>";
+		};
+		A7F7F166984C4937A2ECB32D /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		C3A4B5D6001AWATCH00000001 /* CricPulseWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CricPulseWatch;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,13 +61,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C3A4B5D6004AWATCH00000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXBuildFile section */
+		C3A4B5D600DAWATCH00000001 /* CricPulse Watch App.app in Embed Watch App */ = {isa = PBXBuildFile; fileRef = C3A4B5D6002AWATCH00000001 /* CricPulse Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
 
 /* Begin PBXGroup section */
 		9669BBFA2F72396A00A040D7 = {
 			isa = PBXGroup;
 			children = (
 				9669BC052F72396A00A040D7 /* CricPulse */,
+				A7F7F166984C4937A2ECB32D /* Shared */,
+				C3A4B5D6001AWATCH00000001 /* CricPulseWatch */,
 				9669BC042F72396A00A040D7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				9669BC032F72396A00A040D7 /* CricPulse.app */,
+				C3A4B5D6002AWATCH00000001 /* CricPulse Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -55,19 +104,45 @@
 				9669BBFF2F72396A00A040D7 /* Sources */,
 				9669BC002F72396A00A040D7 /* Frameworks */,
 				9669BC012F72396A00A040D7 /* Resources */,
+				C3A4B5D600CAWATCH00000001 /* Embed Watch App */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C3A4B5D600BAWATCH00000001 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9669BC052F72396A00A040D7 /* CricPulse */,
+				A7F7F166984C4937A2ECB32D /* Shared */,
 			);
 			name = CricPulse;
 			packageProductDependencies = (
 			);
 			productName = CricPulse;
 			productReference = 9669BC032F72396A00A040D7 /* CricPulse.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C3A4B5D6009AWATCH00000001 /* CricPulse Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3A4B5D6008AWATCH00000001 /* Build configuration list for PBXNativeTarget "CricPulse Watch App" */;
+			buildPhases = (
+				C3A4B5D6003AWATCH00000001 /* Sources */,
+				C3A4B5D6004AWATCH00000001 /* Frameworks */,
+				C3A4B5D6005AWATCH00000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C3A4B5D6001AWATCH00000001 /* CricPulseWatch */,
+				A7F7F166984C4937A2ECB32D /* Shared */,
+			);
+			name = "CricPulse Watch App";
+			packageProductDependencies = (
+			);
+			productName = "CricPulse Watch App";
+			productReference = C3A4B5D6002AWATCH00000001 /* CricPulse Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -81,6 +156,9 @@
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					9669BC022F72396A00A040D7 = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					C3A4B5D6009AWATCH00000001 = {
 						CreatedOnToolsVersion = 26.3;
 					};
 				};
@@ -100,12 +178,20 @@
 			projectRoot = "";
 			targets = (
 				9669BC022F72396A00A040D7 /* CricPulse */,
+				C3A4B5D6009AWATCH00000001 /* CricPulse Watch App */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9669BC012F72396A00A040D7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C3A4B5D6005AWATCH00000001 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +208,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C3A4B5D6003AWATCH00000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C3A4B5D600BAWATCH00000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C3A4B5D6009AWATCH00000001 /* CricPulse Watch App */;
+			targetProxy = C3A4B5D6000AWATCH00000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		9669BC0C2F72396D00A040D7 /* Debug */ = {
@@ -244,15 +345,13 @@
 		9669BC0F2F72396D00A040D7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "AppIconBall AppIconBallDark AppIconBat AppIconBatDark";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PNW8Q928QQ;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -288,15 +387,13 @@
 		9669BC102F72396D00A040D7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "\"AppIconBall AppIconBallDark AppIconBat AppIconBatDark\" \"AppIconBall AppIconBallDark AppIconBat AppIconBatDark\"";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PNW8Q928QQ;
-				ENABLE_APP_SANDBOX = YES;
-				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -329,6 +426,52 @@
 			};
 			name = Release;
 		};
+		C3A4B5D6006AWATCH00000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PNW8Q928QQ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = hasan.CricPulse;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = hasan.CricPulse.watchkitapp;
+				PRODUCT_NAME = "CricPulse Watch App";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		C3A4B5D6007AWATCH00000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PNW8Q928QQ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = hasan.CricPulse;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = hasan.CricPulse.watchkitapp;
+				PRODUCT_NAME = "CricPulse Watch App";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -346,6 +489,15 @@
 			buildConfigurations = (
 				9669BC0F2F72396D00A040D7 /* Debug */,
 				9669BC102F72396D00A040D7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C3A4B5D6008AWATCH00000001 /* Build configuration list for PBXNativeTarget "CricPulse Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3A4B5D6006AWATCH00000001 /* Debug */,
+				C3A4B5D6007AWATCH00000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
