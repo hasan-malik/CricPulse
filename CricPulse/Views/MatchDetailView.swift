@@ -24,6 +24,11 @@ struct MatchDetailView: View {
         .task {
             await vm.load(matchId: match.id)
             if match.isLive { vm.startAutoRefresh(matchId: match.id) }
+            // Non-blocking enrichment — silently no-ops if backend unavailable
+            await vm.loadCricSheetsData(for: match)
+        }
+        .onChange(of: vm.selectedInningsIndex) { _, _ in
+            Task { await vm.reloadCricSheetsInnings() }
         }
         .onDisappear { vm.stopAutoRefresh() }
     }
@@ -41,8 +46,35 @@ struct MatchDetailView: View {
                     }
                     if let innings = vm.selectedInnings {
                         scoreSummaryCard(innings: innings)
+
+                        // CricSheets loading indicator (non-blocking)
+                        if vm.csIsLoading {
+                            HStack(spacing: 8) {
+                                ProgressView().scaleEffect(0.7)
+                                Text("Loading ball-by-ball analytics…")
+                                    .font(.caption).foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 4)
+                        }
+
                         BatsmenView(innings: innings)
                         BowlersView(innings: innings)
+
+                        // Wagon wheel — real CricSheets shots when available
+                        WagonWheelView(shots: vm.effectiveWagonShots(for: innings))
+
+                        // Run rate chart — real per-over data when available
+                        RunRateChartView(data: vm.effectiveOverData(for: innings))
+
+                        // CricSheets-only analytics
+                        if vm.hasCricSheetsData {
+                            if !vm.csPartnerships.isEmpty {
+                                PartnershipsView(partnerships: vm.csPartnerships)
+                            }
+                            if !vm.csFoW.isEmpty {
+                                FallOfWicketsView(fow: vm.csFoW)
+                            }
+                        }
                     }
                 } else {
                     // Fallback: show summary from match list data
